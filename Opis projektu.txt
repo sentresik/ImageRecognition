@@ -1,0 +1,138 @@
+Sebastian Bańburski 39952
+Adam Szymczyk 39963
+IZ-1/l
+
+
+Etap nr 1 – Aspekty Teoretyczne Rozpoznawania Obrazów
+
+
+
+
+1.	Opis Problemu.
+
+
+
+	Uczenie maszynowe oferuje skuteczne rozwiązania dla problemów rozpoznawania obrazów, takich jak rozpoznawanie cyfr. Algorytmy uczenia maszynowego mogą nauczyć się identyfikować wzorce i cechy w danych wizualnych, pozwalając na precyzyjne rozpoznawanie cyfr i innych symboli nawet w trudnych warunkach. Tego typu mechanizm wykorzystywany jest w różnych systemach OCR. W poniższym przypadku rozważymy rozpoznawanie dwóch cyfr: ‘1’ oraz ‘2’.
+
+
+
+
+2.	Opis algorytmów, które można użyć podczas rozwiązania problemu:
+
+
+
+•	K-najbliższych sąsiadów (KNN): Prosta metoda, która klasyfikuje nowe dane na podstawie podobieństwa do istniejących punktów danych w zbiorze treningowym. Łatwa do zaimplementowania, ale może być wolna dla dużych zbiorów danych.
+
+
+•	Maszyny wektorowe podtrzymujące (SVM): Tworzy linię decyzyjną oddzielającą jedną klasę (cyfra 1) od drugiej (cyfra 2). Dobrze sprawdza się, gdy dane są liniowo oddzielne.
+
+
+•	Sieci konwolucyjne (CNN): Szczególnie popularne w zadaniach rozpoznawania obrazów. Wykorzystują one filtry konwolucyjne do wykrywania wzorców w danych. Mogą być bardzo wydajne, ale wymagają więcej danych treningowych i czasu obliczeniowego.
+
+
+•	Sieci rekurencyjne (RNN): Mogą być stosowane do rozpoznawania cyfr w sekwencjach, takich jak ręcznie pisane cyfry, ale nie są tak powszechne w zadaniach tego rodzaju jak CNN.
+
+
+•	Regresja logistyczna: Prosty algorytm klasyfikacji binarnej lub wieloklasowej, który można zastosować do rozpoznawania cyfr.
+3.	Opis algorytmu/metody, która została wybrana do rozwiązania problemu wraz z uzasadnieniem i wybranego algorytmu do nauki.
+
+
+
+Maszyny wektorowe podtrzymujące (SVM) - Wybór ten podyktowany jest szeregiem zalet SVM, czyniących go idealnym kandydatem do tego zadania.
+
+
+•	Wysoka Wydajność: SVM słynie z doskonałej skuteczności w zadaniach klasyfikacji, szczególnie w przypadku obszernych zbiorów danych. W kontekście rozpoznawania cyfr, jeśli dysponujemy dużą bazą obrazów cyfr 1 i 2, SVM może zapewnić wysoki poziom dokładności klasyfikacji.
+
+
+•	Odporność na Szum: Kolejną istotną zaletą SVM jest jego odporność na szum w danych. Oznacza to, że algorytm potrafi radzić sobie z obrazami niskiej jakości lub zniekształconymi, co jest kluczowe w realnym świecie, gdzie obrazy mogą być zaszumione lub zawierać zakłócenia.
+
+
+•	Interpretowalność: W porównaniu do bardziej złożonych algorytmów, takich jak sieci neuronowe, SVM oferuje pewien poziom interpretowalności. Możliwa jest analiza linii decyzyjnej utworzonej przez SVM, co pozwala na lepsze zrozumienie sposobu klasyfikacji obrazów przez algorytm.
+
+
+•	Regularyzacja: SVM posiada wbudowaną technikę regularyzacji, która zapobiega przeuczeniu poprzez znalezienie hiperpłaszczyzny o maksymalnym marginesie. Oznacza to, że linia oddzielająca klasy danych jest "oddalona" od punktów danych, co czyni model mniej podatnym na szum i wahania w danych treningowych, zapewniając lepszą ogólną zdolność uogólniania.
+
+
+•	Możliwość Dostosowania: Istnieje wiele wariantów SVM, umożliwiających dostosowanie algorytmu do specyfiki danego problemu. Możliwe jest eksperymentowanie z różnymi parametrami i funkcjami jądra w celu osiągnięcia optymalnej wydajności.
+
+Uzasadnienie Wyboru SVM:
+
+Biorąc pod uwagę wyżej wymienione zalety, SVM jawi się jako idealny wybór do rozpoznawania cyfr 1 i 2, szczególnie w następujących sytuacjach:
+
+
+•	Dostępności rozległego zbioru danych treningowych
+•	Możliwości wystąpienia szumu lub zniekształceń na obrazach
+•	Konieczności zrozumienia mechanizmu klasyfikacji obrazów przez algorytm
+•	Dostępności czasu i zasobów na eksperymentowanie z parametrami SVM
+
+
+
+
+4.	Opis wybranych zbiorów danych:
+
+
+
+•	MNIST (Modified National Institute of Standards and Technology) to popularny zbiór danych wykorzystywany do uczenia maszynowego i przetwarzania obrazów. Zawiera on zestaw 70 000 odręcznie pisanych cyfr od 0 do 9, które zostały przetworzone na obrazy w skali szarości o rozmiarze 28x28 pikseli. Z tego zestawu 60 000 obrazów jest używanych do treningu modelu, a pozostałe 10 000 do testowania.
+
+		https://www.kaggle.com/datasets/hojjatk/mnist-dataset
+
+
+
+
+
+•	Printed Numerical Digits Image Dataset zawiera około 3000 obrazów cyfrowego zestawu danych. Każdy obraz ma wymiary 28x28 i jest w odcieniach szarości.
+
+		https://github.com/kaydee0502/printed-digits-dataset
+
+
+
+
+
+
+•	Chars74K to wyspecjalizowany zbiór danych mający na celu usprawnienie badań nad rozpoznawaniem znaków numerycznych. Obejmuje łącznie ponad 74 000 obrazów pobranych z trzech różnych źródeł: 7705 cyfr wyodrębnionych ze scen naturalnych, 3410 cyfr narysowanych ręcznie za pomocą tabletu i 62 992 cyfr zsyntetyzowanych z czcionek komputerowych. Ten zbiór danych jest podzielony na 10 klas odpowiadających cyfrom hindusko-arabskim od 0 do 9.Każda cyfra jest reprezentowana jako obrazek o rozmiarach 28x28 pikseli. Oznacza to, że każda cyfra jest reprezentowana w macierzy 28 na 28 pikseli, gdzie każdy piksel może mieć wartość od 0 do 255, reprezentując intensywność odcienia szarości.
+
+https://www.kaggle.com/datasets/karnikakapoor/digits
+
+
+
+
+5.	Proces przetwarzania danych dostosowany do wybranej metody.
+
+
+
+•	Proces przetwarzania danych dla metody SVM w przypadku rozpoznawania cyfr może obejmować kilka kluczowych kroków:
+
+
+1.	Załadowanie danych: W pierwszej kolejności należy załadować dane z wybranego zbioru danych, na przykład z zestawu MNIST, PrintedDigits lub DIGITS (Chars74K). W przypadku PrintedDigits oraz DIGITS (Chars74K) obrazy są podzielone na foldery które pełnią funkcję etykiet, w przypadku MNIST należy załadować dodatkowo plik zawierający etykiety odpowiadające tym obrazom.
+
+
+2.	Przygotowanie danych: Obrazy cyfr mogą być w różnych formatach i rozmiarach. Konieczne będzie przeskalowanie ich do jednolitego rozmiaru, na przykład do kwadratowej formy o ustalonej rozdzielczości, np. 28x28 pikseli. Dodatkowo, warto normalizować wartości pikseli do przedziału [0, 1], czyli przeskalować wartości intensywności pikseli poprzez podzielenie każdej wartości piksela przez 255, co skutkuje skalowaniem wartości pikseli do zakresu od 0 (czarny) do 1 (biały) dla lepszej wydajności algorytmu.
+
+
+3.	Ekstrakcja cech: SVM operuje na wektorach cech, więc konieczne będzie przekształcenie każdego obrazu cyfry w odpowiedni wektor. W przypadku danych obrazowych często używa się deskryptorów takich jak Histogramy Orientacji Gradientu (HOG) lub deskryptory z wykorzystaniem cech lokalnych, takich jak SIFT lub SURF. Zdecydowaliśmy się na zastosowanie deskryptora HOG, który doskonale nadaje się do analizy obrazów o prostej strukturze tekstury, takich jak cyfry.
+
+
+4.	Podział danych: Dane należy podzielić na zbiór treningowy i zbiór testowy. Zazwyczaj stosuje się podział w proporcji np. 80% danych na trening i 20% na testowanie, aby ocenić skuteczność modelu na danych, których nie widział w trakcie treningu.
+
+
+5.	Trenowanie modelu SVM: Następnie można przystąpić do treningu modelu SVM na zbiorze treningowym. Podczas treningu algorytm będzie dostosowywał parametry linii decyzyjnej, aby jak najlepiej oddzielić obrazy cyfr na podstawie ich cech.
+
+
+6.	Ocena modelu: Po zakończeniu treningu należy ocenić skuteczność modelu na zbiorze testowym, stosując metryki takie jak dokładność klasyfikacji, macierz pomyłek, czy krzywa ROC.
+
+
+7.	Dostosowanie parametrów: W przypadku niezadowalających wyników, można eksperymentować z różnymi parametrami SVM, takimi jak typ jądra (liniowe, wielomianowe, RBF), wartości parametrów C i gamma, aby uzyskać optymalne rezultaty.
+8.	Walidacja krzyżowa: Aby zapewnić, że model generalizuje dobrze na nowe dane, można również zastosować technikę walidacji krzyżowej, dzieląc dane na kilka podzbiorów i trenując oraz testując model na różnych kombinacjach podziałów danych.
+
+
+9.	Proces ten może być iteracyjny, co oznacza, że można wielokrotnie dostosowywać model, przetwarzać dane i oceniać jego skuteczność, aby osiągnąć najlepsze możliwe wyniki.
+
+6.	Przygotowanie zbiorów uczących i testujących.
+
+
+Klasyfikacja zbiorów:
+
+- MNIST - Baza danych MNIST z ręcznie pisanych cyfr ma zbiór treningowy składający się z 60 000 przykładów oraz zbiór testowy składający się z 10 000 przykładów.
+
+- DIGITS (Chars74K) i Printed Numerical Digits Image Dataset - w celu klasyfikacji wykorzystamy podział losowy, gdzie procentowy podział na zbiór uczący i testowy będzie wynosił 0.8 (80% na zbiór uczący, 20% na testowy)
+
