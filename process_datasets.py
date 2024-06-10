@@ -15,7 +15,7 @@ def load_images_from_directory(directory, target_size=(28, 28), label=None):
     for filename in os.listdir(directory):
         if filename.endswith('.jpg') or filename.endswith('.png'):
             img = Image.open(os.path.join(directory, filename)).convert('L')
-            img = img.resize(target_size, Image.ANTIALIAS)
+            img = img.resize(target_size, resample=Image.LANCZOS)
             img_array = np.array(img)
             images.append(img_array)
             if label is not None:
@@ -25,18 +25,19 @@ def load_images_from_directory(directory, target_size=(28, 28), label=None):
     return np.array(images), np.array(labels)
 
 def load_mnist_images(file_path, label):
-    with gzip.open(file_path, 'rb') as f:
-        images = np.frombuffer(f.read(), np.uint8, offset=16)
+    with open(file_path, 'rb') as f:
+        f.read(16)
+        images = np.frombuffer(f.read(), np.uint8)
         images = images.reshape(-1, 28, 28)
         labels = np.full(images.shape[0], label)
     return images, labels
 
 def process_dataset(images, labels):
-    # WyodrÍbnianie cech HOG
+    # Wyodrƒôbnianie cech HOG
     hog_features = [hog(image, pixels_per_cell=(8, 8), cells_per_block=(2, 2), feature_vector=True) for image in images]
     hog_features = np.array(hog_features)
     
-    # Podzia≥ na zestawy treningowe i testowe
+    # Podzia≈Ç na zestawy treningowe i testowe
     X_train, X_test, y_train, y_test = train_test_split(hog_features, labels, test_size=0.2, random_state=42)
     
     # Trenowanie modelu SVM
@@ -48,23 +49,23 @@ def process_dataset(images, labels):
     print(classification_report(y_test, y_pred))
     print("Accuracy:", accuracy_score(y_test, y_pred))
 
-# £adowanie danych z poszczegÛlnych zbiorÛw
+# ≈Åadowanie danych z poszczeg√≥lnych zbior√≥w
 assets_images_1, assets_labels_1 = load_images_from_directory('data/assets/1', label=1)
 assets_images_2, assets_labels_2 = load_images_from_directory('data/assets/2', label=2)
 assets_images = np.concatenate((assets_images_1, assets_images_2), axis=0)
 assets_labels = np.concatenate((assets_labels_1, assets_labels_2), axis=0)
 
-chars74k_images_1, chars74k_labels_1 = load_images_from_directory('data/chars74k/1', label=1)
-chars74k_images_2, chars74k_labels_2 = load_images_from_directory('data/chars74k/2', label=2)
+chars74k_images_1, chars74k_labels_1 = load_images_from_directory('data/chars74k/digits updated/1', label=1)
+chars74k_images_2, chars74k_labels_2 = load_images_from_directory('data/chars74k/digits updated/2', label=2)
 chars74k_images = np.concatenate((chars74k_images_1, chars74k_images_2), axis=0)
 chars74k_labels = np.concatenate((chars74k_labels_1, chars74k_labels_2), axis=0)
 
-mnist_images_1, mnist_labels_1 = load_mnist_images('data/mnist/train-images-idx3-ubyte.gz', 1)
-mnist_images_2, mnist_labels_2 = load_mnist_images('data/mnist/train-images-idx3-ubyte.gz', 2)
+mnist_images_1, mnist_labels_1 = load_mnist_images('data/mnist/train-images-idx3-ubyte/train-images-idx3-ubyte', 1)
+mnist_images_2, mnist_labels_2 = load_mnist_images('data/mnist/train-images-idx3-ubyte/train-images-idx3-ubyte', 2)
 mnist_images = np.concatenate((mnist_images_1, mnist_images_2), axis=0)
 mnist_labels = np.concatenate((mnist_labels_1, mnist_labels_2), axis=0)
 
-# Przetwarzanie i trenowanie modelu dla kaødego zbioru
+# Przetwarzanie i trenowanie modelu dla ka≈ºdego zbioru
 print("Processing assets dataset...")
 process_dataset(assets_images, assets_labels)
 
