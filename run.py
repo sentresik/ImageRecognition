@@ -1,23 +1,24 @@
-# zaladowanie bibliotek
+# zaladowanie bibliotek - wykorzystanie technologii SVM i HOG
+
+# zaladowanie danych
 
 
-# 1. zaladowanie danych - zaladowanie wszystkich danych treningowych i testowych
+# normalizacja danych
 
 
-# 2. podzial danych - podzielenie danych na zbior testowy i treningowy
+# wrzucamy dane do HOG ¿eby u³atwiæ SVM prace
 
 
-# 3. normalizacja danych - dostosowanie rozmiaru i normalizacja wartosci piksela z zakresu 0-255 do 0-1
+# podzia³ danych na treningowe i testowe
 
 
-# 4. trening modelu - model SVM i trenowanie na zbiorze treningowym
+# trening modelu - model SVM i trenowanie na zbiorze treningowy
 
 
-# 5. ocena modelu - dane testowe i sprawdzenie wynikow
+# ocena modelu - dane testowe i sprawdzenie wynikow.
 
 
-# 6. wizualizacja wynikow - wykresy i dane
+# wizualizacja wynikow - wykresy i dane
 
 
-# 7. petla iteracyjna - powtarzanie i udoskonalanie modelu
-
+# petla iteracyjna - powtarzanie i udoskonalanie modelu
