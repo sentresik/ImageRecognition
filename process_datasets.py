@@ -50,6 +50,7 @@ def process_dataset(images, labels):
     y_pred = svm_model.predict(X_test)
     print(classification_report(y_test, y_pred))
     print("Accuracy:", accuracy_score(y_test, y_pred))
+    return X_train, X_test, y_train, y_test, svm_model
 
 # Ładowanie danych z poszczególnych zbiorów
 assets_images_1, assets_labels_1 = load_images_from_directory('data/assets/1', label=1)
