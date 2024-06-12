@@ -77,3 +77,11 @@ process_dataset(chars74k_images, chars74k_labels)
 
 print("Przetwarzanie zbioru MNIST...")
 process_dataset(mnist_images, mnist_labels)
+
+# Łączenie obrazów i etykiet ze wszystkich zbiorów
+combined_images = np.concatenate((assets_images, chars74k_images, mnist_images), axis=0)
+combined_labels = np.concatenate((assets_labels, chars74k_labels, mnist_labels), axis=0)
+
+# Przetwarzanie i trenowanie modelu dla połączonych zbiorów
+print("Przetwarzanie wszystkich zbiorów...")
+process_dataset(combined_images, combined_labels)
