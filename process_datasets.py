@@ -28,30 +28,24 @@ def load_mnist_images(images_file_path, labels_file_path):
         f.read(16)
         images = np.frombuffer(f.read(), np.uint8)
         images = images.reshape(-1, 28, 28)
-        
     with open(labels_file_path, 'rb') as f:
         f.read(8)
         labels = np.frombuffer(f.read(), np.uint8)
-        
     # Filtracja tylko etykiet 1 i 2
     filter_indices = np.where((labels == 1) | (labels == 2))[0]
     images = images[filter_indices]
     labels = labels[filter_indices]
-    
     return images, labels
 
 def process_dataset(images, labels):
     # Wyodrębnianie cech HOG
     hog_features = [hog(image, pixels_per_cell=(8, 8), cells_per_block=(2, 2), feature_vector=True) for image in images]
     hog_features = np.array(hog_features)
-    
     # Podział na zestawy treningowe i testowe
     X_train, X_test, y_train, y_test = train_test_split(hog_features, labels, test_size=0.2, random_state=42)
-    
     # Trenowanie modelu SVM
     svm_model = svm.SVC(kernel='linear')
     svm_model.fit(X_train, y_train)
-    
     # Ewaluacja modelu
     y_pred = svm_model.predict(X_test)
     print(classification_report(y_test, y_pred))
@@ -68,8 +62,8 @@ chars74k_images_2, chars74k_labels_2 = load_images_from_directory('data/chars74k
 chars74k_images = np.concatenate((chars74k_images_1, chars74k_images_2), axis=0)
 chars74k_labels = np.concatenate((chars74k_labels_1, chars74k_labels_2), axis=0)
 
-mnist_images_1, mnist_labels_1 = load_mnist_images('data/mnist1/train-images-idx3-ubyte', 'data/mnist1/train-labels-idx1-ubyte')
-mnist_images_2, mnist_labels_2 = load_mnist_images('data/mnist1/t10k-images-idx3-ubyte', 'data/mnist1/t10k-labels-idx1-ubyte')
+mnist_images_1, mnist_labels_1 = load_mnist_images('data/MNIST/train-images-idx3-ubyte/train-images-idx3-ubyte', 'data/MNIST/train-labels-idx1-ubyte/train-labels-idx1-ubyte')
+mnist_images_2, mnist_labels_2 = load_mnist_images('data/MNIST/t10k-images-idx3-ubyte/t10k-images-idx3-ubyte', 'data/MNIST/t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte')
 mnist_images = np.concatenate((mnist_images_1, mnist_images_2), axis=0)
 mnist_labels = np.concatenate((mnist_labels_1, mnist_labels_2), axis=0)
 
