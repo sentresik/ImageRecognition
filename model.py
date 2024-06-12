@@ -81,11 +81,20 @@ chars74k_results = process_dataset(chars74k_images, chars74k_labels)
 print("Przetwarzanie zbioru MNIST...")
 mnist_results = process_dataset(mnist_images, mnist_labels)
 
+# Łączenie obrazów i etykiet ze wszystkich zbiorów
+combined_images = np.concatenate((assets_images, chars74k_images, mnist_images), axis=0)
+combined_labels = np.concatenate((assets_labels, chars74k_labels, mnist_labels), axis=0)
+
+# Przetwarzanie i trenowanie modelu dla połączonych zbiorów
+print("Przetwarzanie wszystkich zbiorów...")
+combined_results = process_dataset(combined_images, combined_labels)
+
 # Przygotowanie danych do wizualizacji
 results = [
     {'accuracy': assets_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Assets'},
     {'accuracy': chars74k_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Chars74k'},
-    {'accuracy': mnist_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'MNIST'}
+    {'accuracy': mnist_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'MNIST'},
+    {'accuracy': combined_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Combined'}
 ]
 
 # Wizualizacja wyników ewaluacji modelu
