@@ -3,7 +3,6 @@
 import os
 import numpy as np
 from PIL import Image
-import gzip
 from skimage.feature import hog
 from sklearn import svm
 from sklearn.model_selection import train_test_split
@@ -24,12 +23,21 @@ def load_images_from_directory(directory, target_size=(28, 28), label=None):
                 labels.append(1 if '1' in directory else 2)
     return np.array(images), np.array(labels)
 
-def load_mnist_images(file_path, label):
-    with open(file_path, 'rb') as f:
+def load_mnist_images(images_file_path, labels_file_path):
+    with open(images_file_path, 'rb') as f:
         f.read(16)
         images = np.frombuffer(f.read(), np.uint8)
         images = images.reshape(-1, 28, 28)
-        labels = np.full(images.shape[0], label)
+        
+    with open(labels_file_path, 'rb') as f:
+        f.read(8)
+        labels = np.frombuffer(f.read(), np.uint8)
+        
+    # Filtracja tylko etykiet 1 i 2
+    filter_indices = np.where((labels == 1) | (labels == 2))[0]
+    images = images[filter_indices]
+    labels = labels[filter_indices]
+    
     return images, labels
 
 def process_dataset(images, labels):
@@ -60,17 +68,17 @@ chars74k_images_2, chars74k_labels_2 = load_images_from_directory('data/chars74k
 chars74k_images = np.concatenate((chars74k_images_1, chars74k_images_2), axis=0)
 chars74k_labels = np.concatenate((chars74k_labels_1, chars74k_labels_2), axis=0)
 
-mnist_images_1, mnist_labels_1 = load_mnist_images('data/mnist/train-images-idx3-ubyte/train-images-idx3-ubyte', 1)
-mnist_images_2, mnist_labels_2 = load_mnist_images('data/mnist/train-images-idx3-ubyte/train-images-idx3-ubyte', 2)
+mnist_images_1, mnist_labels_1 = load_mnist_images('data/mnist1/train-images-idx3-ubyte', 'data/mnist1/train-labels-idx1-ubyte')
+mnist_images_2, mnist_labels_2 = load_mnist_images('data/mnist1/t10k-images-idx3-ubyte', 'data/mnist1/t10k-labels-idx1-ubyte')
 mnist_images = np.concatenate((mnist_images_1, mnist_images_2), axis=0)
 mnist_labels = np.concatenate((mnist_labels_1, mnist_labels_2), axis=0)
 
 # Przetwarzanie i trenowanie modelu dla każdego zbioru
-print("Processing assets dataset...")
+print("Przetwarzanie zbioru assets...")
 process_dataset(assets_images, assets_labels)
 
-print("Processing chars74k dataset...")
+print("Przetwarzanie zbioru chars74k...")
 process_dataset(chars74k_images, chars74k_labels)
 
-print("Processing MNIST dataset...")
+print("Przetwarzanie zbioru MNIST...")
 process_dataset(mnist_images, mnist_labels)
