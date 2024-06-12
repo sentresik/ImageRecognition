@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+import evaluation_visualization
 from PIL import Image
 from skimage.feature import hog
 from sklearn import svm
@@ -48,9 +49,11 @@ def process_dataset(images, labels):
     svm_model.fit(X_train, y_train)
     # Ewaluacja modelu
     y_pred = svm_model.predict(X_test)
-    print(classification_report(y_test, y_pred))
-    print("Accuracy:", accuracy_score(y_test, y_pred))
-    return X_train, X_test, y_train, y_test, svm_model
+    report = classification_report(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(report)
+    print("Accuracy:", accuracy)
+    return {'report': report, 'accuracy': accuracy}
 
 # Ładowanie danych z poszczególnych zbiorów
 assets_images_1, assets_labels_1 = load_images_from_directory('data/assets/1', label=1)
@@ -70,18 +73,20 @@ mnist_labels = np.concatenate((mnist_labels_1, mnist_labels_2), axis=0)
 
 # Przetwarzanie i trenowanie modelu dla każdego zbioru
 print("Przetwarzanie zbioru assets...")
-process_dataset(assets_images, assets_labels)
+assets_results = process_dataset(assets_images, assets_labels)
 
 print("Przetwarzanie zbioru chars74k...")
-process_dataset(chars74k_images, chars74k_labels)
+chars74k_results = process_dataset(chars74k_images, chars74k_labels)
 
 print("Przetwarzanie zbioru MNIST...")
-process_dataset(mnist_images, mnist_labels)
+mnist_results = process_dataset(mnist_images, mnist_labels)
 
-# Łączenie obrazów i etykiet ze wszystkich zbiorów
-combined_images = np.concatenate((assets_images, chars74k_images, mnist_images), axis=0)
-combined_labels = np.concatenate((assets_labels, chars74k_labels, mnist_labels), axis=0)
+# Przygotowanie danych do wizualizacji
+results = [
+    {'accuracy': assets_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Assets'},
+    {'accuracy': chars74k_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Chars74k'},
+    {'accuracy': mnist_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'MNIST'}
+]
 
-# Przetwarzanie i trenowanie modelu dla połączonych zbiorów
-print("Przetwarzanie wszystkich zbiorów...")
-process_dataset(combined_images, combined_labels)
+# Wizualizacja wyników ewaluacji modelu
+evaluation_visualization.plot_evaluation_results(results)

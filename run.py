@@ -28,9 +28,9 @@ import subprocess
 def main():
     try:
         # Uruchomienie skryptu process_datasets.py
-        subprocess.run(['python', 'process_datasets.py'], check=True)
+        subprocess.run(['python', 'model.py'], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"An error occurred while running process_datasets.py: {e}")
+        print(f"An error occurred while running model.py: {e}")
 
 if __name__ == "__main__":
     main()
