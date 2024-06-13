@@ -7,7 +7,7 @@ from PIL import Image
 from skimage.feature import hog
 from sklearn import svm
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
 
 def load_images_from_directory(directory, target_size=(28, 28), label=None):
     images = []
@@ -50,10 +50,25 @@ def process_dataset(images, labels):
     # Ewaluacja modelu
     y_pred = svm_model.predict(X_test)
     report = classification_report(y_test, y_pred)
+
     accuracy = accuracy_score(y_test, y_pred)
-    print(report)
+    precision_1 = precision_score(y_test, y_pred, pos_label=1)
+    recall_1 = recall_score(y_test, y_pred, pos_label=1)
+    f1_1 = f1_score(y_test, y_pred, pos_label=1)
+
+    precision_2 = precision_score(y_test, y_pred, pos_label=2)
+    recall_2 = recall_score(y_test, y_pred, pos_label=2)
+    f1_2 = f1_score(y_test, y_pred, pos_label=2)
+
+    avg_precision = (precision_1 + precision_2) / 2
+    avg_recall = (recall_1 + recall_2) / 2
+    avg_f1 = (f1_1 + f1_2) / 2
+
+    print("Precision:", avg_precision)
+    print("Recall:", avg_recall)
+    print("F1:", avg_f1)
     print("Accuracy:", accuracy)
-    return {'report': report, 'accuracy': accuracy}
+    return {'report': report, 'accuracy': accuracy, 'precision': avg_precision, 'recall': avg_recall, 'f1': avg_f1}
 
 # Ładowanie danych z poszczególnych zbiorów
 assets_images_1, assets_labels_1 = load_images_from_directory('data/assets/1', label=1)
@@ -81,11 +96,20 @@ chars74k_results = process_dataset(chars74k_images, chars74k_labels)
 print("Przetwarzanie zbioru MNIST...")
 mnist_results = process_dataset(mnist_images, mnist_labels)
 
+# Łączenie obrazów i etykiet ze wszystkich zbiorów
+combined_images = np.concatenate((assets_images, chars74k_images, mnist_images), axis=0)
+combined_labels = np.concatenate((assets_labels, chars74k_labels, mnist_labels), axis=0)
+
+# Przetwarzanie i trenowanie modelu dla połączonych zbiorów
+print("Przetwarzanie wszystkich zbiorów...")
+combined_results = process_dataset(combined_images, combined_labels)
+
 # Przygotowanie danych do wizualizacji
 results = [
-    {'accuracy': assets_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Assets'},
-    {'accuracy': chars74k_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'Chars74k'},
-    {'accuracy': mnist_results['accuracy'], 'precision': None, 'recall': None, 'f1-score': None, 'dataset': 'MNIST'}
+    {'accuracy': assets_results['accuracy'], 'precision': assets_results['precision'], 'recall': assets_results['recall'], 'f1-score': assets_results['f1'], 'dataset': 'Assets'},
+    {'accuracy': chars74k_results['accuracy'], 'precision': chars74k_results['precision'], 'recall': chars74k_results['recall'], 'f1-score': chars74k_results['f1'], 'dataset': 'Chars74k'},
+    {'accuracy': mnist_results['accuracy'], 'precision': mnist_results['precision'], 'recall': mnist_results['recall'], 'f1-score': mnist_results['f1'], 'dataset': 'MNIST'},
+    {'accuracy': combined_results['accuracy'], 'precision': combined_results['precision'], 'recall': combined_results['recall'], 'f1-score': combined_results['f1'], 'dataset': 'Combined'}
 ]
 
 # Wizualizacja wyników ewaluacji modelu

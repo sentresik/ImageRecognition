@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\data",
-    "\\src"
+    "\\data\\assets",
+    "\\data\\Chars74K",
+    "\\data\\MNIST"
   ],
-  "SelectedNode": "\\src\\models.py",
+  "SelectedNode": "\\model.py",
   "PreviewInSolutionExplorer": false
 }
